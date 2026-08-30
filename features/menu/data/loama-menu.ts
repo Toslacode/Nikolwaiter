@@ -97,7 +97,7 @@ export const loamaDishes: Dish[] = [
     id: "lemon-pasta",
     categoryId: "pasta",
     name: "פסטה לימונית",
-    description: "קלילה יחסית, קרמית עם חמיצות של לימון.",
+    description: "לינגוויני ברוטב לימון, שום, פרמזן ופסטה טרי",
     price: 68,
     image: img("lemon-pasta"),
     ingredients: ["פסטה", "שמנת", "לימון", "פרמזן", "בזיליקום"],

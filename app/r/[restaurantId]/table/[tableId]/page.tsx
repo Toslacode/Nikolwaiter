@@ -1,14 +1,10 @@
 import { notFound } from "next/navigation";
+import { RestaurantHomeScreen } from "@/features/restaurants/components/RestaurantHomeScreen";
 import { getRestaurant } from "@/features/restaurants/data/restaurants";
 
 /**
- * QR entry point (Screen 2 — restaurant home).
- *
+ * Screen 2 — restaurant home, and the QR entry point.
  * `/r/loama/table/12` opens Loama at table 12 without going through discovery.
- * The ids are read straight from the URL so they can later map to real
- * restaurant and table records.
- *
- * Placeholder only — awaiting the approved reference screenshot.
  */
 export default async function RestaurantTablePage({
   params,
@@ -23,12 +19,16 @@ export default async function RestaurantTablePage({
     notFound();
   }
 
+  const featuredId = restaurant.featuredDishIds[0];
+  const featured =
+    restaurant.dishes.find((d) => d.id === featuredId) ?? restaurant.dishes[0];
+
   return (
-    <main>
-      <h1>{restaurant.name}</h1>
-      <p>{restaurant.subtitle}</p>
-      <p>שולחן {tableNumber}</p>
-      <p>מסך בית המסעדה — ממתין לעיצוב לפי תמונות הייחוס.</p>
-    </main>
+    <RestaurantHomeScreen
+      restaurant={restaurant}
+      tableNumber={tableNumber}
+      featured={featured}
+      orderCount={0}
+    />
   );
 }

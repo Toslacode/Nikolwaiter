@@ -1,32 +1,111 @@
 @import "tailwindcss";
 
 /*
- * PROVISIONAL TOKENS.
- *
- * These values come from the written brief only ("ivory / warm beige
- * background, white and cream cards, warm gold accents, dark charcoal text").
- * The approved reference screenshots are the real source of truth and have not
- * been readable yet, so every value here is expected to be replaced once they
- * are available. Do not build finished screens against these.
+ * Design tokens sampled directly from the approved reference screenshots in
+ * public/images. Values were read off the PNGs (colour probes, edge detection
+ * and ink-height measurements at a 390px logical viewport), so treat these as
+ * the design system — not as adjustable preferences.
  */
 @theme {
-  --color-ivory: #faf7f2;
-  --color-cream: #f4efe6;
-  --color-surface: #ffffff;
-  --color-gold: #c9a24b;
-  --color-charcoal: #2b2724;
-  --color-muted: #8a827a;
+  /* Surfaces */
+  --color-ivory: #fbf8f5; /* page background */
+  --color-cream: #fbf9f7; /* soft cards (greeting, chat sheet) */
+  --color-surface: #ffffff; /* elevated white cards and rows */
+  --color-hairline: #f0ebe4;
+  --color-track: #ede5db; /* progress bar track */
+
+  /* Gold */
+  --color-gold: #b8935a;
+  --color-gold-deep: #ae8447;
+  --color-gold-light: #c39758;
+  --color-gold-soft: #f2deb2; /* "קרוב אליכם" badge */
+  --color-gold-tint: #f5efe3; /* icon circle backgrounds */
+
+  /* Ink */
+  --color-ink: #1e1a17;
+  --color-ink-soft: #3a322d;
+  --color-muted: #7a716b;
+
+  /* Radii */
+  --radius-photo: 14px;
+  --radius-row: 16px;
+  --radius-card: 24px;
+  --radius-sheet: 28px;
+
+  --font-sans: var(--font-assistant), system-ui, sans-serif;
+  --font-display: var(--font-frank), Georgia, serif;
 }
 
-html,
-body {
-  background: var(--color-ivory);
-  color: var(--color-charcoal);
+@layer base {
+  html,
+  body {
+    background: var(--color-ivory);
+    color: var(--color-ink);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* The references show no focus rings; keep them for keyboards only. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
 }
 
-body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Assistant", "Heebo", "Rubik",
-    "Helvetica Neue", Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
+@utility shadow-card {
+  box-shadow:
+    0 1px 2px rgba(60, 46, 28, 0.04),
+    0 6px 18px rgba(60, 46, 28, 0.05);
+}
+
+@utility shadow-row {
+  box-shadow:
+    0 1px 2px rgba(60, 46, 28, 0.035),
+    0 3px 10px rgba(60, 46, 28, 0.04);
+}
+
+@utility shadow-gold {
+  box-shadow: 0 5px 14px rgba(174, 132, 71, 0.3);
+}
+
+@utility shadow-sheet {
+  box-shadow: 0 -6px 26px rgba(60, 46, 28, 0.07);
+}
+
+@utility bg-gold-gradient {
+  background-image: linear-gradient(
+    270deg,
+    var(--color-gold-light) 0%,
+    #b98845 52%,
+    var(--color-gold-deep) 100%
+  );
+}
+
+/* Press feedback: the references are static, so keep this restrained. */
+@utility tap {
+  transition:
+    transform 140ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 140ms ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tap:active {
+    transform: scale(0.985);
+  }
+}
+
+/* Hide scrollbars on the horizontal chip rails, as in the references. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
