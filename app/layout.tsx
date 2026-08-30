@@ -19,6 +19,12 @@ const frank = Frank_Ruhl_Libre({
 export const metadata: Metadata = {
   title: "Nikol",
   description: "המלצרית החכמה שלכם",
+  // App/tab icon only — the in-screen branding stays the arch-and-wheat mark
+  // from the approved references.
+  icons: {
+    icon: "/icons/ICON.png",
+    apple: "/icons/ICON.png",
+  },
 };
 
 export const viewport: Viewport = {
