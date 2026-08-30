@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+/*
+ * PROVISIONAL TOKENS.
+ *
+ * These values come from the written brief only ("ivory / warm beige
+ * background, white and cream cards, warm gold accents, dark charcoal text").
+ * The approved reference screenshots are the real source of truth and have not
+ * been readable yet, so every value here is expected to be replaced once they
+ * are available. Do not build finished screens against these.
+ */
+@theme {
+  --color-ivory: #faf7f2;
+  --color-cream: #f4efe6;
+  --color-surface: #ffffff;
+  --color-gold: #c9a24b;
+  --color-charcoal: #2b2724;
+  --color-muted: #8a827a;
+}
+
+html,
+body {
+  background: var(--color-ivory);
+  color: var(--color-charcoal);
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Assistant", "Heebo", "Rubik",
+    "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
