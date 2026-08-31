@@ -88,16 +88,54 @@
   );
 }
 
-/* Press feedback: the references are static, so keep this restrained. */
+/*
+ * Press feedback. Down is fast and immediate (an interface that waits for the
+ * release feels dead); the return carries a touch of spring, which is what
+ * makes a control feel physical rather than merely styled.
+ */
 @utility tap {
   transition:
-    transform 140ms cubic-bezier(0.32, 0.72, 0, 1),
-    opacity 140ms ease;
+    transform 260ms cubic-bezier(0.34, 1.35, 0.64, 1),
+    box-shadow 200ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .tap:active {
-    transform: scale(0.985);
+    transform: scale(0.965);
+    transition: transform 90ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+}
+
+/*
+ * Screen arrival. Every route under the restaurant shell renders through a
+ * template, so each navigation plays this once — the screen slides in from the
+ * trailing edge instead of hard-cutting into place.
+ */
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translate3d(22px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@utility screen-enter {
+  animation: screen-in 340ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-enter {
+    animation: none;
+  }
+  .tap,
+  .tap:active {
+    transition: none;
+    transform: none;
   }
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { WaitressSketch } from "@/components/Brand";
 import {
   ChevronLeft,
@@ -68,6 +68,21 @@ export function RecommendScreen({
 
   const selected = useMemo(() => answers[question.id] ?? [], [answers, question.id]);
 
+  // The question card should visibly arrive when the step advances rather than
+  // its contents being swapped underneath the reader.
+  const previousStep = useRef(step);
+  const [entering, setEntering] = useState(false);
+  useEffect(() => {
+    if (previousStep.current === step) return;
+    previousStep.current = step;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setEntering(true);
+    const frame = requestAnimationFrame(() =>
+      requestAnimationFrame(() => setEntering(false)),
+    );
+    return () => cancelAnimationFrame(frame);
+  }, [step]);
+
   const choose = (choiceId: string) => {
     setAnswers((prev) => {
       const current = prev[question.id] ?? [];
@@ -99,7 +114,7 @@ export function RecommendScreen({
     <MobileShell>
       <div className="flex min-h-dvh flex-col">
         <main className="flex-1 px-5 pt-[10px]">
-          <RestaurantHeader restaurant={restaurant} tableNumber={tableNumber} />
+          <RestaurantHeader restaurant={restaurant} tableNumber={tableNumber} showBack />
 
           <section className="mt-[9px] rounded-card bg-cream px-[19px] pb-[14px] pt-[12px] shadow-card">
             {/* Hero */}
@@ -121,18 +136,28 @@ export function RecommendScreen({
             </p>
 
             {/* Current question */}
-            <div className="mt-[12px] rounded-[20px] bg-surface px-[11px] pb-[8px] pt-[6px] shadow-card">
+            <div className="mt-[12px] overflow-hidden rounded-[20px] bg-surface px-[11px] pb-[8px] pt-[6px] shadow-card">
               <p className="text-center text-[12px] leading-none text-ink-soft">
                 {questionProgressLabel(step)}
               </p>
               <div dir="ltr" className="mt-[7px] h-[4.5px] overflow-hidden rounded-full bg-track">
                 <div
-                  className="h-full rounded-full bg-gold transition-[width] duration-300 ease-out"
+                  className="h-full rounded-full bg-gold transition-[width] duration-[380ms] ease-[cubic-bezier(.32,.72,0,1)]"
                   style={{ width: `${progress * 100}%` }}
                 />
               </div>
 
-              <h3 className="mt-[14px] text-center text-[20px] font-extrabold leading-none text-ink">
+              <div
+                className="mt-[14px]"
+                style={{
+                  transform: entering ? "translateX(16px)" : "translateX(0)",
+                  opacity: entering ? 0 : 1,
+                  transition: entering
+                    ? "none"
+                    : "transform 340ms cubic-bezier(.32,.72,0,1), opacity 280ms ease",
+                }}
+              >
+              <h3 className="text-center text-[20px] font-extrabold leading-none text-ink">
                 {question.title}
               </h3>
 
@@ -158,6 +183,7 @@ export function RecommendScreen({
                     </button>
                   );
                 })}
+              </div>
               </div>
             </div>
 

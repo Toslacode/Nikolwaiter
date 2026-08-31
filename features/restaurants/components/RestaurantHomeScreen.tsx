@@ -41,7 +41,7 @@ export function RestaurantHomeScreen({
     <MobileShell>
       <div className="flex min-h-dvh flex-col">
         <main className="flex-1 px-5 pt-[10px]">
-          <RestaurantHeader restaurant={restaurant} tableNumber={tableNumber} />
+          <RestaurantHeader restaurant={restaurant} tableNumber={tableNumber} showBack />
 
           {/* Greeting + primary actions */}
           <section className="mt-[9px] rounded-card bg-cream px-[11px] pb-[10px] pt-[8px] shadow-card">

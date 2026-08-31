@@ -26,10 +26,22 @@ export function FeaturedDish({
         href={href}
         className="tap mt-[6px] flex h-[97px] items-stretch overflow-hidden rounded-[20px] bg-surface shadow-card"
       >
+        {/*
+          Every line is shrink-0 on purpose. `truncate`/`line-clamp` set
+          overflow, which under flexbox drops a child's automatic minimum size
+          to zero — in a fixed-height column that lets the browser collapse the
+          name to nothing to resolve a few pixels of overflow. Clamping the
+          description to two lines keeps the card's height honest whatever the
+          font metrics turn out to be.
+        */}
         <div className="flex min-w-0 flex-1 flex-col pe-[36px] ps-[10px] pt-[7px] pb-[9px] text-right">
-          <p className="truncate text-[16px] font-extrabold leading-none text-ink">{dish.name}</p>
-          <p className="mt-[10px] text-[11.5px] leading-[1.5] text-muted">{dish.description}</p>
-          <p className="mt-auto text-[17px] font-extrabold leading-none text-gold">
+          <p className="shrink-0 truncate text-[16px] font-extrabold leading-none text-ink">
+            {dish.name}
+          </p>
+          <p className="mt-[6px] line-clamp-2 shrink-0 text-[11.5px] leading-[1.5] text-muted">
+            {dish.description}
+          </p>
+          <p className="mt-auto shrink-0 text-[17px] font-extrabold leading-none text-gold">
             ₪{dish.price}
           </p>
         </div>

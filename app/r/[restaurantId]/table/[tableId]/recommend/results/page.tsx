@@ -27,7 +27,7 @@ export default async function ResultsPage({
   return (
     <MobileShell>
       <main className="px-5 pt-[10px]">
-        <RestaurantHeader restaurant={restaurant} tableNumber={tableNumber} />
+        <RestaurantHeader restaurant={restaurant} tableNumber={tableNumber} showBack />
         <section className="mt-[9px] rounded-card bg-cream px-[19px] py-8 text-center shadow-card">
           <p className="text-[19.5px] font-extrabold leading-none text-ink">
             מכינה לכם המלצות…
