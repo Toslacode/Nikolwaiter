@@ -1,10 +1,13 @@
 import { notFound } from "next/navigation";
-import { RestaurantHomeScreen } from "@/features/restaurants/components/RestaurantHomeScreen";
+import { NikolConversation } from "@/features/ai-waiter/components/NikolConversation";
 import { getRestaurant } from "@/features/restaurants/data/restaurants";
 
 /**
- * Screen 2 — restaurant home, and the QR entry point.
- * `/r/loama/table/12` opens Loama at table 12 without going through discovery.
+ * The main restaurant experience, and the QR entry point.
+ *
+ * `/r/loama/table/12` opens straight into the conversation — Nikol is already
+ * at the table. There is no dashboard in front of her; talking to her is how
+ * you reach the menu, the recommendations, preferences and everything else.
  */
 export default async function RestaurantTablePage({
   params,
@@ -19,15 +22,5 @@ export default async function RestaurantTablePage({
     notFound();
   }
 
-  const featured = restaurant.featuredDishIds
-    .map((id) => restaurant.dishes.find((d) => d.id === id))
-    .filter((d): d is NonNullable<typeof d> => Boolean(d));
-
-  return (
-    <RestaurantHomeScreen
-      restaurant={restaurant}
-      tableNumber={tableNumber}
-      featured={featured}
-    />
-  );
+  return <NikolConversation restaurant={restaurant} tableNumber={tableNumber} />;
 }

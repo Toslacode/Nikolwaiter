@@ -188,3 +188,17 @@ export const Lock: Icon = (props) => (
     <path d="M8.4 10.4V7.8a3.6 3.6 0 0 1 7.2 0v2.6" />
   </svg>
 );
+
+/** Add to order. */
+export const Plus: Icon = (props) => (
+  <svg {...base(props)} strokeWidth={2.4}>
+    <path d="M12 5.5v13M5.5 12h13" />
+  </svg>
+);
+
+/** Confirmation that something landed in the order. */
+export const Check: Icon = (props) => (
+  <svg {...base(props)} strokeWidth={2.6}>
+    <path d="m5 12.5 4.6 4.5L19 7.5" />
+  </svg>
+);

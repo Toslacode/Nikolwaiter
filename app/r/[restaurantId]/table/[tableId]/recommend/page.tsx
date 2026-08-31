@@ -1,8 +1,12 @@
 import { notFound } from "next/navigation";
-import { RecommendConversation } from "@/features/ai-waiter/components/RecommendConversation";
+import { NikolConversation } from "@/features/ai-waiter/components/NikolConversation";
 import { getRestaurant } from "@/features/restaurants/data/restaurants";
 
-/** Screen 3 — "תמליצי לי", a guided conversation with Nikol. */
+/**
+ * Kept so existing links and QR codes still land somewhere sensible: it is
+ * the same conversation, opened with the recommendation branch already
+ * running rather than as a separate questionnaire screen.
+ */
 export default async function RecommendPage({
   params,
 }: {
@@ -16,5 +20,11 @@ export default async function RecommendPage({
     notFound();
   }
 
-  return <RecommendConversation restaurant={restaurant} tableNumber={tableNumber} />;
+  return (
+    <NikolConversation
+      restaurant={restaurant}
+      tableNumber={tableNumber}
+      startWith="recommend"
+    />
+  );
 }
