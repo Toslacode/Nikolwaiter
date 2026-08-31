@@ -21,7 +21,13 @@ export function priceWithModifiers(
   return dish.price + extras;
 }
 
-let itemCounter = 0;
+/**
+ * Unique across reloads, because order items are persisted — a counter that
+ * restarts at 1 would collide with items already in the stored session.
+ */
+function itemId(): string {
+  return `item-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
 
 export function createOrderItem(
   dish: Dish,
@@ -39,9 +45,8 @@ export function createOrderItem(
     noteToKitchen,
   } = options;
 
-  itemCounter += 1;
   return {
-    id: `item-${itemCounter}`,
+    id: itemId(),
     dishId: dish.id,
     dinerId,
     quantity,

@@ -26,7 +26,7 @@ export const loama: Restaurant = {
   ],
   categories: loamaCategories,
   dishes: loamaDishes,
-  featuredDishIds: ["lemon-pasta"],
+  featuredDishIds: ["lemon-pasta", "sea-bass", "entrecote"],
   popularDishIds: ["hamburger", "lemon-pasta", "sea-bass", "carpaccio"],
   recommendationRules: [
     {

@@ -16,5 +16,5 @@ export default async function Page({
     notFound();
   }
 
-  return <ComingNextScreen restaurant={restaurant} tableNumber={tableNumber} title="הכי פופולרי" />;
+  return <ComingNextScreen restaurant={restaurant} tableNumber={tableNumber} title="הכי פופולרי" phase={2} />;
 }

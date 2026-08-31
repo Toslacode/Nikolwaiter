@@ -11,7 +11,14 @@ export const loamaCategories: MenuCategory[] = [
   { id: "drinks", name: "שתייה" },
 ];
 
-const img = (id: string) => `/restaurants/loama/dishes/${id}.jpg`;
+/**
+ * Dishes whose photo has actually been shot. A restaurant onboarding onto
+ * Nikol always has part of its menu un-photographed, so an empty string is a
+ * real state the UI renders a designed stand-in for — not a broken path.
+ */
+const PHOTOGRAPHED = new Set(["lemon-pasta"]);
+
+const img = (id: string) => (PHOTOGRAPHED.has(id) ? `/restaurants/loama/dishes/${id}.jpg` : "");
 
 /**
  * Mock menu for Loama. `traits` are the vocabulary the mock recommendation

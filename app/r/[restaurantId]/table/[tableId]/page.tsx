@@ -19,16 +19,15 @@ export default async function RestaurantTablePage({
     notFound();
   }
 
-  const featuredId = restaurant.featuredDishIds[0];
-  const featured =
-    restaurant.dishes.find((d) => d.id === featuredId) ?? restaurant.dishes[0];
+  const featured = restaurant.featuredDishIds
+    .map((id) => restaurant.dishes.find((d) => d.id === id))
+    .filter((d): d is NonNullable<typeof d> => Boolean(d));
 
   return (
     <RestaurantHomeScreen
       restaurant={restaurant}
       tableNumber={tableNumber}
       featured={featured}
-      orderCount={0}
     />
   );
 }

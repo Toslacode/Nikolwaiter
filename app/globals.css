@@ -34,6 +34,18 @@
 
   --font-sans: var(--font-assistant), system-ui, sans-serif;
   --font-display: var(--font-frank), Georgia, serif;
+
+  /*
+   * Motion. Two curves carry the whole product: `settle` for anything the
+   * user did not throw (critically damped, no overshoot), `spring` for
+   * releases that carried momentum. Durations are deliberately short — the
+   * brief asks for calm, and long motion reads as slow, not premium.
+   */
+  --ease-settle: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.35, 0.64, 1);
+  --dur-fast: 140ms;
+  --dur-base: 260ms;
+  --dur-slow: 380ms;
 }
 
 @layer base {
@@ -91,32 +103,53 @@
 /*
  * Press feedback. Down is fast and immediate (an interface that waits for the
  * release feels dead); the return carries a touch of spring, which is what
- * makes a control feel physical rather than merely styled.
+ * makes a control feel physical rather than merely styled. On desktop the
+ * same class also lifts on hover, where a pointer makes that legible.
  */
 @utility tap {
   transition:
-    transform 260ms cubic-bezier(0.34, 1.35, 0.64, 1),
-    box-shadow 200ms ease,
-    background-color 150ms ease,
-    border-color 150ms ease;
+    transform var(--dur-base) var(--ease-spring),
+    box-shadow var(--dur-base) var(--ease-settle),
+    background-color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .tap:active {
     transform: scale(0.965);
-    transition: transform 90ms cubic-bezier(0.32, 0.72, 0, 1);
+    transition: transform 90ms var(--ease-settle);
+  }
+}
+
+/* Hover lift is a pointer affordance, so gate it on a real pointer. */
+@media (hover: hover) and (pointer: fine) {
+  .lift {
+    transition:
+      transform var(--dur-base) var(--ease-settle),
+      box-shadow var(--dur-base) var(--ease-settle);
+  }
+  .lift:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 2px 4px rgba(60, 46, 28, 0.05),
+      0 14px 32px rgba(60, 46, 28, 0.1);
+  }
+  .lift:active {
+    transform: translateY(0) scale(0.99);
   }
 }
 
 /*
  * Screen arrival. Every route under the restaurant shell renders through a
- * template, so each navigation plays this once — the screen slides in from the
- * trailing edge instead of hard-cutting into place.
+ * template, so each navigation plays this once — the screen rises into place
+ * instead of hard-cutting. Vertical rather than horizontal so it reads the
+ * same way in RTL and LTR.
  */
 @keyframes screen-in {
   from {
     opacity: 0;
-    transform: translate3d(22px, 0, 0);
+    transform: translate3d(0, 10px, 0);
   }
   to {
     opacity: 1;
@@ -125,15 +158,94 @@
 }
 
 @utility screen-enter {
-  animation: screen-in 340ms cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: screen-in var(--dur-slow) var(--ease-settle) both;
 }
 
+/* Staggered reveal for lists, so a screen assembles rather than blinking in. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@utility rise {
+  animation: rise-in var(--dur-slow) var(--ease-settle) both;
+  animation-delay: calc(var(--rise-index, 0) * 45ms);
+}
+
+/* Cart count and other confirmations: a single, short pop. */
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.28);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@utility pop-once {
+  animation: pop 380ms var(--ease-spring);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@utility toast-enter {
+  animation: toast-in var(--dur-base) var(--ease-spring) both;
+}
+
+/* Skeletons breathe rather than sweep — calmer, and cheaper to paint. */
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@utility skeleton {
+  background: var(--color-track);
+  border-radius: 12px;
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+/*
+ * Reduced motion keeps the feedback but drops anything vestibular: no
+ * travel, no overshoot, no looping pulse — just the state change itself.
+ */
 @media (prefers-reduced-motion: reduce) {
-  .screen-enter {
+  .screen-enter,
+  .rise,
+  .pop-once,
+  .toast-enter {
+    animation: none;
+  }
+  .skeleton {
     animation: none;
   }
   .tap,
-  .tap:active {
+  .tap:active,
+  .lift,
+  .lift:hover,
+  .lift:active {
     transition: none;
     transform: none;
   }
@@ -146,4 +258,32 @@
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/*
+ * Translucent chrome. Sheets and bars float over content that scrolls
+ * underneath, rather than sitting in an opaque strip. Falls back to a solid
+ * surface where the viewer has asked for less transparency.
+ */
+@utility glass {
+  background: color-mix(in srgb, var(--color-cream) 82%, transparent);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--color-cream);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Sticky bottom UI has to clear the iPhone home indicator. */
+@utility pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+@utility pb-safe-0 {
+  padding-bottom: env(safe-area-inset-bottom);
 }
