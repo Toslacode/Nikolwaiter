@@ -41,6 +41,9 @@
    * releases that carried momentum. Durations are deliberately short — the
    * brief asks for calm, and long motion reads as slow, not premium.
    */
+  /* Narrow phones drop the labels on the two floating top controls. */
+  --breakpoint-xs: 22rem;
+
   --ease-settle: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-spring: cubic-bezier(0.34, 1.35, 0.64, 1);
   --dur-fast: 140ms;
@@ -390,4 +393,26 @@
     background: var(--color-surface);
     border-color: var(--color-hairline);
   }
+}
+
+/*
+ * The room behind the glass.
+ *
+ * The approved concept sits the conversation over a warmly blurred dining
+ * room. Until a venue supplies its own interior photograph this is built in
+ * CSS — out-of-focus warm highlights over a deep champagne ground — which
+ * reads as the same material without pretending to be a specific restaurant.
+ */
+@utility room-backdrop {
+  background-color: #cbb492;
+  background-image:
+    radial-gradient(circle at 12% 20%, rgba(255, 246, 226, 0.98) 0%, rgba(255, 246, 226, 0) 22%),
+    radial-gradient(circle at 86% 14%, rgba(255, 238, 202, 0.95) 0%, rgba(255, 238, 202, 0) 20%),
+    radial-gradient(circle at 66% 36%, rgba(255, 251, 240, 0.9) 0%, rgba(255, 251, 240, 0) 16%),
+    radial-gradient(circle at 30% 66%, rgba(255, 250, 238, 0.92) 0%, rgba(255, 250, 238, 0) 24%),
+    radial-gradient(circle at 94% 72%, rgba(240, 214, 172, 0.95) 0%, rgba(240, 214, 172, 0) 24%),
+    radial-gradient(circle at 48% 92%, rgba(196, 166, 126, 0.9) 0%, rgba(196, 166, 126, 0) 34%),
+    radial-gradient(circle at 3% 48%, rgba(178, 148, 112, 0.85) 0%, rgba(178, 148, 112, 0) 24%),
+    radial-gradient(circle at 74% 88%, rgba(255, 242, 216, 0.7) 0%, rgba(255, 242, 216, 0) 18%),
+    linear-gradient(180deg, #ddc9a8 0%, #cdb693 46%, #b99f7c 100%);
 }

@@ -11,7 +11,7 @@ import type { SVGProps } from "react";
 export function NikolFace({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
-      viewBox="0 0 64 64"
+      viewBox="0 0 72 78"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
@@ -20,32 +20,37 @@ export function NikolFace({ className, ...props }: SVGProps<SVGSVGElement>) {
     >
       <g
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="2.1"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
       >
-        {/* hair: one continuous bob, tucked behind the shoulders */}
-        <path d="M18 30c0-9 6.3-15 14-15s14 6 14 15v6c0 2.2-1.3 3.6-3 4" />
-        <path d="M21 40c-1.7-.4-3-1.8-3-4v-6" />
-        {/* fringe */}
-        <path d="M19.5 28c2.2-6.4 6.6-9.5 12.5-9.5S42.3 21.6 44.5 28c-2.6-2.4-5.6-3.5-8.2-2.3-2.4 1.1-3.7 2.9-6.3 2.9-2.9 0-5.6-1.1-8.4-.6" />
+        {/* top knot */}
+        <circle cx="36" cy="7.5" r="4.6" />
+        {/* hair, swept back into the knot */}
+        <path d="M22.5 25c0-8.6 6-14.6 13.5-14.6S49.5 16.4 49.5 25" />
         {/* face */}
-        <path d="M22.5 29.5v5.5a9.5 9.5 0 0 0 19 0v-5.5" />
-        {/* shoulders and collar */}
-        <path d="M25.5 42.5 20 45c-3.4 1.6-5.5 4.6-6 9" />
-        <path d="M38.5 42.5 44 45c3.4 1.6 5.5 4.6 6 9" />
-        <path d="M27 43.5 32 49l5-5.5" />
-        {/* apron neckline, the one waitress cue */}
-        <path d="M26 47.5c0 6 12 6 12 0" />
+        <path d="M24.5 24.5v6.2a11.5 11.5 0 0 0 23 0v-6.2" />
+        {/* ears */}
+        <path d="M24.5 28.5c-2.2-.6-3.6.6-3.2 2.5.4 1.8 1.8 2.7 3.4 2.4" />
+        <path d="M47.5 28.5c2.2-.6 3.6.6 3.2 2.5-.4 1.8-1.8 2.7-3.4 2.4" />
+        {/* neck and shoulders */}
+        <path d="M30 41.5v3.4c0 1.6-1 2.5-3 3.2l-8 2.8C14 52.7 11 57 10.5 64L9 78" />
+        <path d="M42 41.5v3.4c0 1.6 1 2.5 3 3.2l8 2.8C57.6 52.7 60.6 57 61 64L62.5 78" />
+        {/* apron: bib, straps, and the wheat sprig that ties her to the mark */}
+        <path d="M27 49.5c0 3.6 4 5.4 9 5.4s9-1.8 9-5.4" />
+        <path d="M24 62c0-4.4 5-7 12-7s12 2.6 12 7v16H24V62Z" />
+        <path d="M36 65v7" />
+        <path d="M36 69.5c0-2.4 1.7-4.1 4.1-4.1 0 2.4-1.7 4.1-4.1 4.1Z" />
+        <path d="M36 69.5c0-2.4-1.7-4.1-4.1-4.1 0 2.4 1.7 4.1 4.1 4.1Z" />
       </g>
-      {/* eyes and smile carry the warmth; kept as marks, not features */}
-      <circle cx="28" cy="34" r="1.5" fill="currentColor" />
-      <circle cx="36" cy="34" r="1.5" fill="currentColor" />
+      {/* eyes and smile stay marks, not features */}
+      <circle cx="31.5" cy="29.5" r="1.6" fill="currentColor" />
+      <circle cx="40.5" cy="29.5" r="1.6" fill="currentColor" />
       <path
-        d="M29.5 38.2c1.5 1.3 3.5 1.3 5 0"
+        d="M33 34.2c1.7 1.5 4.3 1.5 6 0"
         stroke="currentColor"
-        strokeWidth="1.8"
+        strokeWidth="1.9"
         strokeLinecap="round"
         fill="none"
       />
@@ -54,10 +59,10 @@ export function NikolFace({ className, ...props }: SVGProps<SVGSVGElement>) {
 }
 
 const SIZES = {
-  xs: { box: "size-[26px]", face: "size-[20px]", ring: "1px" },
-  sm: { box: "size-[32px]", face: "size-[25px]", ring: "1px" },
-  md: { box: "size-[44px]", face: "size-[34px]", ring: "1.5px" },
-  lg: { box: "size-[76px]", face: "size-[58px]", ring: "1.5px" },
+  xs: { box: "size-[28px]", face: "size-[21px]", ring: "0px" },
+  sm: { box: "size-[34px]", face: "size-[26px]", ring: "1px" },
+  md: { box: "size-[62px]", face: "size-[48px]", ring: "0px" },
+  lg: { box: "size-[86px]", face: "size-[66px]", ring: "1px" },
 } as const;
 
 /**
@@ -74,8 +79,8 @@ export function NikolAvatar({
   const s = SIZES[size];
   return (
     <span
-      className={`relative flex ${s.box} shrink-0 items-center justify-center rounded-full bg-[radial-gradient(120%_120%_at_30%_15%,#fffdfa_0%,#f7ecdb_55%,#f0e0c8_100%)] text-gold-deep ${className}`}
-      style={{ boxShadow: `0 0 0 ${s.ring} rgba(184,147,90,0.22), 0 4px 14px rgba(60,46,28,0.10)` }}
+      className={`relative flex ${s.box} shrink-0 items-center justify-center overflow-hidden rounded-full bg-[radial-gradient(120%_120%_at_35%_20%,#fffdfa_0%,#f8f1e6_60%,#f2e7d6_100%)] text-gold ${className}`}
+      style={{ boxShadow: `0 0 0 ${s.ring} rgba(184,147,90,0.18)` }}
     >
       <NikolFace className={s.face} />
     </span>

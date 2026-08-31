@@ -3,6 +3,8 @@ import type { Appetite, DietaryPreference, DietaryTag, Mood } from "@/types";
 export interface QuestionChoice<T = string> {
   id: T;
   label: string;
+  /** Small glyph on the reply chip, as in the approved concept. */
+  icon?: string;
 }
 
 export interface Question {
@@ -42,10 +44,10 @@ export const recommendationQuestions: Question[] = [
     reactFreeText: "הבנתי, רשמתי לי.",
     type: "single",
     choices: [
-      { id: "light", label: "משהו קל" },
-      { id: "full-meal", label: "ארוחה מלאה" },
-      { id: "sharing", label: "מנות לחלוקה" },
-      { id: "surprise", label: "תפתיעי אותי" },
+      { id: "light", label: "משהו קל", icon: "🌱" },
+      { id: "full-meal", label: "ארוחה מלאה", icon: "🍽️" },
+      { id: "sharing", label: "מנות לחלוקה", icon: "🤝" },
+      { id: "surprise", label: "תפתיעי אותי", icon: "✨" },
     ] satisfies QuestionChoice<Mood>[],
   },
   {
@@ -53,7 +55,7 @@ export const recommendationQuestions: Question[] = [
     title: "יש העדפות?",
     ask: "מה אתם יותר אוהבים?",
     react: {
-      meat: "בשרי, מצוין.",
+      meat: "בשר, מצוין.",
       fish: "דגים, בחירה יפה.",
       vegetarian: "צמחוני, יש לנו כמה מנות שאני ממש אוהבת.",
       vegan: "טבעוני, אין בעיה.",
@@ -62,11 +64,11 @@ export const recommendationQuestions: Question[] = [
     reactFreeText: "סבבה, לקחתי בחשבון.",
     type: "single",
     choices: [
-      { id: "meat", label: "בשרי" },
-      { id: "fish", label: "דגים" },
-      { id: "vegetarian", label: "צמחוני" },
-      { id: "vegan", label: "טבעוני" },
-      { id: "none", label: "אין העדפה" },
+      { id: "meat", label: "בשר", icon: "🥩" },
+      { id: "fish", label: "דגים", icon: "🐟" },
+      { id: "vegetarian", label: "צמחוני", icon: "🌿" },
+      { id: "vegan", label: "טבעוני", icon: "🌱" },
+      { id: "none", label: "אין לי העדפה", icon: "✨" },
     ] satisfies QuestionChoice<DietaryPreference>[],
   },
   {
@@ -84,13 +86,13 @@ export const recommendationQuestions: Question[] = [
     reactFreeText: "תודה, שמתי לב לזה.",
     type: "multi",
     choices: [
-      { id: "gluten-free", label: "ללא גלוטן" },
-      { id: "lactose-free", label: "ללא לקטוז" },
-      { id: "vegetarian", label: "צמחוני" },
-      { id: "vegan", label: "טבעוני" },
+      { id: "gluten-free", label: "ללא גלוטן", icon: "🌾" },
+      { id: "lactose-free", label: "ללא לקטוז", icon: "🥛" },
+      { id: "vegetarian", label: "צמחוני", icon: "🌿" },
+      { id: "vegan", label: "טבעוני", icon: "🌱" },
       // Selecting this reveals a free-text field for the diner to describe it.
-      { id: "allergy", label: "יש לי אלרגיה" },
-      { id: "none", label: "אין מגבלות" },
+      { id: "allergy", label: "יש לי אלרגיה", icon: "⚠️" },
+      { id: "none", label: "אין מגבלות", icon: "✨" },
     ] satisfies QuestionChoice<DietaryTag | "allergy" | "none">[],
   },
   {
@@ -105,9 +107,9 @@ export const recommendationQuestions: Question[] = [
     reactFreeText: "הבנתי.",
     type: "single",
     choices: [
-      { id: "small", label: "קצת" },
-      { id: "medium", label: "בינוני" },
-      { id: "large", label: "מאוד" },
+      { id: "small", label: "קצת", icon: "🍃" },
+      { id: "medium", label: "בינוני", icon: "🍽️" },
+      { id: "large", label: "מאוד", icon: "🔥" },
     ] satisfies QuestionChoice<Appetite>[],
   },
 ];

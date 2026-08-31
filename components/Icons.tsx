@@ -162,3 +162,29 @@ export const Meat: Icon = (props) => (
     />
   </svg>
 );
+
+/** Service bell — calling a waiter. */
+export const Bell: Icon = (props) => (
+  <svg {...base(props)} strokeWidth={1.7}>
+    <path d="M4.2 17.4h15.6a7.8 7.8 0 0 0-15.6 0Z" fill="currentColor" stroke="none" />
+    <path d="M3 19.6h18" />
+    <path d="M12 9.6V7.4" />
+    <circle cx="12" cy="5.6" r="1.5" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+/** The diner, beside their own messages. */
+export const Person: Icon = (props) => (
+  <svg {...base(props)} fill="currentColor" stroke="none">
+    <circle cx="12" cy="8.2" r="3.6" />
+    <path d="M4.8 19.4c0-3.6 3.4-5.9 7.2-5.9s7.2 2.3 7.2 5.9c0 .7-.6 1.2-1.3 1.2H6.1c-.7 0-1.3-.5-1.3-1.2Z" />
+  </svg>
+);
+
+/** Padlock for the privacy note under the conversation. */
+export const Lock: Icon = (props) => (
+  <svg {...base(props)} strokeWidth={1.8}>
+    <rect x="5.2" y="10.4" width="13.6" height="9.4" rx="2.4" fill="currentColor" stroke="none" />
+    <path d="M8.4 10.4V7.8a3.6 3.6 0 0 1 7.2 0v2.6" />
+  </svg>
+);

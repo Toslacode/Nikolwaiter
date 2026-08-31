@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { NikolAvatar } from "@/components/NikolAvatar";
-import { Book, ChevronLeft, ChevronRight, Mic, People, Send, Sparkle } from "@/components/Icons";
+import { Bell, Book, ChevronLeft, Lock, Mic, Person, Send, Sparkle } from "@/components/Icons";
+import { NikolMark } from "@/components/Brand";
 import { recommendationQuestions } from "@/features/ai-waiter/data/questions";
 import { useSession } from "@/features/session/SessionProvider";
 import { nikolAI } from "@/services/ai";
@@ -16,7 +17,11 @@ interface Turn {
   id: string;
   role: "nikol" | "diner";
   text: string;
+  at: string;
 }
+
+const clock = () =>
+  new Date().toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" });
 
 let turnSeq = 0;
 const turnId = (role: string) => `${role}-${(turnSeq += 1)}`;
@@ -61,7 +66,7 @@ export function RecommendConversation({
   }, []);
 
   const say = useCallback((role: Turn["role"], text: string) => {
-    setTurns((t) => [...t, { id: turnId(role), role, text }]);
+    setTurns((t) => [...t, { id: turnId(role), role, text, at: clock() }]);
   }, []);
 
   /** A pause long enough to read as thinking, skipped under reduced motion. */
@@ -214,35 +219,35 @@ export function RecommendConversation({
       */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -z-10 bg-ivory bg-cover bg-center"
-        style={{
-          inset: "-15%",
-          backgroundImage: `url(/restaurants/${restaurant.id}/card.jpg)`,
-          filter: "blur(50px)",
-        }}
+        className="room-backdrop pointer-events-none absolute"
+        style={{ inset: "-12%", filter: "blur(22px)" }}
       />
+      {/* A veil that keeps the conversation legible over the room. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(251,248,245,0.86)_0%,rgba(251,248,245,0.92)_55%,rgba(248,242,234,0.95)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(252,248,242,0.40)_0%,rgba(251,245,237,0.34)_45%,rgba(244,233,217,0.46)_100%)]"
       />
 
-      <div className="mx-auto flex min-h-dvh w-full max-w-[620px] flex-col px-4 pb-5 pt-4 lg:max-w-[660px] lg:pb-10 lg:pt-8">
+      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-[620px] flex-col px-4 pb-5 pt-4 lg:max-w-[760px] lg:pb-10 lg:pt-8">
         {/* Top: identity in the middle, small floating controls at the edges */}
-        <header className="relative flex flex-col items-center lg:flex-row lg:items-center lg:justify-center">
+        <header className="relative flex items-start justify-between gap-2">
+          {/* Calling a waiter sits at the inline start, the menu at the end. */}
           <button
             type="button"
-            onClick={() => router.back()}
-            aria-label="חזרה"
-            className="glass-control tap absolute top-0 start-0 flex size-[34px] items-center justify-center rounded-full text-ink-soft"
+            onClick={callWaiter}
+            className="glass-control tap flex h-[36px] shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[12px] font-semibold text-ink-soft"
           >
-            <ChevronRight className="size-[15px]" />
+            <Bell className="size-[13px] text-gold" />
+            <span className="hidden xs:inline">קריאה למלצר</span>
           </button>
 
-          <div className="text-center">
-            <h1 className="font-display text-[20px] leading-none font-normal text-ink lg:text-[22px]">
+          {/* The brand doubles as the way back to the restaurant home. */}
+          <Link href={base} className="tap flex flex-col items-center text-center">
+            <NikolMark className="h-[38px] w-[30px] text-gold" />
+            <h1 className="mt-[2px] font-display text-[19px] leading-none font-normal text-ink lg:text-[21px]">
               {restaurant.name}
             </h1>
-            <p className="mt-[5px] text-[9px] font-semibold tracking-[0.05em] text-gold lg:text-[10px]">
+            <p className="mt-[4px] text-[8.5px] font-semibold tracking-[0.05em] text-gold lg:text-[9.5px]">
               {restaurant.subtitle}
             </p>
             <p className="mt-[6px] flex items-center justify-center gap-2 text-[11.5px] text-muted">
@@ -250,25 +255,15 @@ export function RecommendConversation({
               שולחן {tableNumber}
               <span className="size-[3px] rounded-full bg-gold" />
             </p>
-          </div>
+          </Link>
 
-          <div className="mt-3.5 flex items-center gap-2 lg:absolute lg:end-0 lg:mt-0">
-            <Link
-              href={`${base}/menu`}
-              className="glass-control tap flex h-[34px] items-center gap-1.5 rounded-full px-3.5 text-[12px] font-semibold text-ink-soft"
-            >
-              <Book className="size-[13px] text-gold" />
-              תפריט
-            </Link>
-            <button
-              type="button"
-              onClick={callWaiter}
-              className="glass-control tap flex h-[34px] items-center gap-1.5 rounded-full px-3.5 text-[12px] font-semibold text-ink-soft"
-            >
-              <People className="size-[13px] text-gold" />
-              קריאה למלצר
-            </button>
-          </div>
+          <Link
+            href={`${base}/menu`}
+            className="glass-control tap flex h-[36px] shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[12px] font-semibold text-ink-soft"
+          >
+            <Book className="size-[13px] text-gold" />
+            <span className="hidden xs:inline">תפריט</span>
+          </Link>
         </header>
 
         {calledWaiter && (
@@ -286,48 +281,60 @@ export function RecommendConversation({
           aria-label="שיחה עם ניקול"
           className="glass-panel mt-4 flex min-h-0 flex-1 flex-col overflow-hidden rounded-[30px] lg:mt-6 lg:flex-none lg:max-h-[72vh]"
         >
-          <header className="flex items-center gap-3 px-5 pt-5 lg:px-6">
-            <NikolAvatar size="md" />
-            <div className="min-w-0 flex-1">
-              <p className="flex items-center gap-1.5 text-[16px] font-extrabold leading-none text-ink">
+          <header className="flex items-center justify-center gap-4 px-5 pt-7 pb-1 lg:px-6">
+            <div>
+              <p className="flex items-center gap-2 text-[24px] font-extrabold leading-none tracking-[-0.01em] text-ink lg:text-[31px]">
+                <Sparkle className="size-[17px] text-gold lg:size-[20px]" />
                 תמליצי לי
-                <Sparkle className="size-[12px] text-gold" />
               </p>
-              <p className="mt-[6px] text-[11.5px] leading-none text-muted">
+              <p className="mt-[10px] text-[12.5px] leading-none text-muted">
                 {step < TOTAL ? `שאלה ${step + 1} מתוך ${TOTAL}` : "סיימנו — ההמלצות מוכנות"}
               </p>
+              {/* Four steps, shown as four segments rather than one sliding bar. */}
+              <div className="mt-2.5 flex gap-1.5">
+                {recommendationQuestions.map((q, i) => (
+                  <span
+                    key={q.id}
+                    className={`h-[4px] w-[26px] rounded-full transition-colors duration-[420ms] lg:w-[34px] ${
+                      i < step ? "bg-gold" : i === step ? "bg-gold/45" : "bg-gold/12"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
+            <NikolAvatar size="md" className="lg:size-[92px]" />
           </header>
-
-          <div className="mx-5 mt-3.5 h-[3px] overflow-hidden rounded-full bg-track/70 lg:mx-6">
-            <div
-              className="h-full rounded-full bg-gold-gradient transition-[width] duration-[420ms] ease-[cubic-bezier(.32,.72,0,1)]"
-              style={{ width: `${progress * 100}%` }}
-            />
-          </div>
 
           <div
             ref={scrollRef}
             className="no-scrollbar flex min-h-[180px] flex-1 flex-col overflow-y-auto px-5 py-4 lg:px-6"
           >
             <div className="mt-auto space-y-2.5">
-            {turns.map((turn) =>
-              turn.role === "nikol" ? (
-                <div key={turn.id} className="message-enter flex items-end gap-2">
+            {turns.map((turn) => (
+              <div key={turn.id} className="message-enter flex items-end gap-2">
+                {turn.role === "nikol" ? (
                   <NikolAvatar size="xs" />
-                  <p className="max-w-[80%] whitespace-pre-line rounded-[18px] rounded-es-[6px] bg-[color-mix(in_srgb,#ffffff_78%,transparent)] px-3.5 py-2.5 text-[13.5px] leading-[1.5] text-ink-soft shadow-row">
-                    {turn.text}
-                  </p>
-                </div>
-              ) : (
-                <p
-                  key={turn.id}
-                  className="message-enter ms-auto w-fit max-w-[80%] rounded-[18px] rounded-ee-[6px] bg-gold-gradient px-3.5 py-2.5 text-[13.5px] leading-[1.5] text-white shadow-gold"
+                ) : (
+                  <span className="flex size-[28px] shrink-0 items-center justify-center rounded-full bg-gold-tint text-gold-deep">
+                    <Person className="size-[15px]" />
+                  </span>
+                )}
+                <div
+                  className={`flex max-w-[78%] items-end gap-3 rounded-[16px] px-3.5 py-2.5 ${
+                    turn.role === "nikol"
+                      ? "bg-[color-mix(in_srgb,#ffffff_86%,transparent)] shadow-row"
+                      : "bg-[color-mix(in_srgb,#efe3d0_82%,transparent)]"
+                  }`}
                 >
-                  {turn.text}
-                </p>
-              ),
-            )}
+                  <span className="whitespace-pre-line text-[13.5px] leading-[1.55] text-ink-soft">
+                    {turn.text}
+                  </span>
+                  <time className="shrink-0 pb-[2px] text-[9.5px] tabular-nums text-muted/70">
+                    {turn.at}
+                  </time>
+                </div>
+              </div>
+            ))}
 
             {typing && (
               <div className="message-enter flex items-end gap-2">
@@ -358,10 +365,11 @@ export function RecommendConversation({
                     onClick={() => onChip(choice.id)}
                     aria-pressed={question.type === "multi" ? on : undefined}
                     style={{ "--rise-index": i } as React.CSSProperties}
-                    className={`chip-enter tap rounded-full px-4 py-2 text-[13px] font-semibold ${
+                    className={`chip-enter tap flex items-center gap-1.5 rounded-full px-4 py-2.5 text-[13px] font-semibold ${
                       on ? "glass-chip-on text-white" : "glass-chip text-ink-soft"
                     }`}
                   >
+                    {choice.icon && <span className="text-[13px] leading-none">{choice.icon}</span>}
                     {choice.label}
                   </button>
                 );
@@ -419,12 +427,17 @@ export function RecommendConversation({
               type="button"
               aria-label="הקלטה קולית"
               title="הקלטה קולית — לא פעיל בהדגמה"
-              className="tap flex size-[34px] shrink-0 items-center justify-center rounded-full bg-gold-tint text-gold-deep"
+              className="tap flex size-[34px] shrink-0 items-center justify-center rounded-full bg-gold text-white"
             >
               <Mic className="size-[15px]" />
             </button>
           </form>
         </section>
+
+        <p className="mt-3.5 flex items-center justify-center gap-1.5 text-[10.5px] text-muted/80">
+          <Lock className="size-[11px]" />
+          ההמלצות נבנות לצורך שיפור השירות בלבד
+        </p>
         </div>
       </div>
     </div>
