@@ -158,7 +158,7 @@
 }
 
 @utility screen-enter {
-  animation: screen-in var(--dur-slow) var(--ease-settle) both;
+  animation: screen-in var(--dur-slow) var(--ease-settle) backwards;
 }
 
 /* Staggered reveal for lists, so a screen assembles rather than blinking in. */
@@ -174,7 +174,7 @@
 }
 
 @utility rise {
-  animation: rise-in var(--dur-slow) var(--ease-settle) both;
+  animation: rise-in var(--dur-slow) var(--ease-settle) backwards;
   animation-delay: calc(var(--rise-index, 0) * 45ms);
 }
 
@@ -207,7 +207,7 @@
 }
 
 @utility toast-enter {
-  animation: toast-in var(--dur-base) var(--ease-spring) both;
+  animation: toast-in var(--dur-base) var(--ease-spring) backwards;
 }
 
 /* Skeletons breathe rather than sweep — calmer, and cheaper to paint. */
@@ -286,4 +286,108 @@
 
 @utility pb-safe-0 {
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ==================================================================
+ * Liquid glass
+ *
+ * Three weights, deliberately few. Heavier material for the structural
+ * panel, lighter for controls that sit on top of it — never a light glass
+ * stacked on another light glass, which is where legibility collapses.
+ * ================================================================== */
+
+/* The main conversational surface: a thick, warm material. */
+@utility glass-panel {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, #ffffff 62%, transparent) 0%,
+      color-mix(in srgb, var(--color-cream) 72%, transparent) 100%
+    );
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border: 1px solid color-mix(in srgb, #ffffff 55%, transparent);
+  box-shadow:
+    0 1px 0 0 color-mix(in srgb, #ffffff 65%, transparent) inset,
+    0 24px 70px rgba(60, 46, 28, 0.14),
+    0 2px 8px rgba(60, 46, 28, 0.05);
+}
+
+/* Small floating controls — menu, call a waiter, back. */
+@utility glass-control {
+  background: color-mix(in srgb, #ffffff 58%, transparent);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid color-mix(in srgb, #ffffff 60%, transparent);
+  box-shadow: 0 6px 20px rgba(60, 46, 28, 0.09);
+}
+
+/* Quick-reply pills. Lighter still, so they read as answers not buttons. */
+@utility glass-chip {
+  background: color-mix(in srgb, #ffffff 52%, transparent);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 16%, transparent);
+  box-shadow: 0 2px 10px rgba(60, 46, 28, 0.05);
+}
+
+/* The selected answer: gold, but still glass rather than a solid slab. */
+@utility glass-chip-on {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-gold-light) 88%, transparent),
+    color-mix(in srgb, var(--color-gold-deep) 92%, transparent)
+  );
+  border: 1px solid color-mix(in srgb, #ffffff 45%, transparent);
+  box-shadow:
+    0 1px 0 0 color-mix(in srgb, #ffffff 40%, transparent) inset,
+    0 6px 18px rgba(174, 132, 71, 0.3);
+}
+
+/*
+ * Conversation motion. A message arrives; it does not appear. The travel is
+ * small and vertical so it reads identically in RTL.
+ */
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@utility message-enter {
+  animation: message-in 380ms var(--ease-settle) backwards;
+}
+
+/* Chips stagger in under the message they belong to. */
+@utility chip-enter {
+  animation: message-in 320ms var(--ease-settle) backwards;
+  animation-delay: calc(var(--rise-index, 0) * 40ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .message-enter,
+  .chip-enter {
+    animation: none;
+  }
+}
+
+/*
+ * Where the viewer has asked for less transparency, every glass weight
+ * becomes an opaque surface with a defined edge. Blur is decoration; the
+ * hierarchy has to survive without it.
+ */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-panel,
+  .glass-control,
+  .glass-chip {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--color-surface);
+    border-color: var(--color-hairline);
+  }
 }

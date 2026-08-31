@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import { RecommendScreen } from "@/features/ai-waiter/components/RecommendScreen";
+import { RecommendConversation } from "@/features/ai-waiter/components/RecommendConversation";
 import { getRestaurant } from "@/features/restaurants/data/restaurants";
 
-/** Screen 3 — "תמליצי לי", the four-question recommendation flow. */
+/** Screen 3 — "תמליצי לי", a guided conversation with Nikol. */
 export default async function RecommendPage({
   params,
 }: {
@@ -16,5 +16,5 @@ export default async function RecommendPage({
     notFound();
   }
 
-  return <RecommendScreen restaurant={restaurant} tableNumber={tableNumber} />;
+  return <RecommendConversation restaurant={restaurant} tableNumber={tableNumber} />;
 }

@@ -2,14 +2,19 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Wheat } from "@/components/Icons";
 
 /**
- * Dish photography, with a designed stand-in for dishes whose photo hasn't
- * been shot yet. A restaurant onboarding onto Nikol will always have some of
- * its menu un-photographed, so the gap is a real product state — it should
- * look deliberate rather than like a broken image.
+ * Dish photography.
+ *
+ * Renders nothing when there is no photograph. A restaurant onboarding onto
+ * Nikol always has part of its menu un-shot, and a decorative block standing
+ * in for the missing picture reads as a broken image — the layout should
+ * simply close up around it instead. Callers use `hasPhoto` to decide.
  */
+export function hasPhoto(src: string): boolean {
+  return Boolean(src);
+}
+
 export function DishImage({
   src,
   alt = "",
@@ -25,18 +30,7 @@ export function DishImage({
 }) {
   const [failed, setFailed] = useState(false);
 
-  // An empty src means "not photographed yet" — render the stand-in without
-  // asking the network for a file we know is not there.
-  if (!src || failed) {
-    return (
-      <div
-        className={`absolute inset-0 flex items-center justify-center bg-[linear-gradient(135deg,#f6efe4_0%,#efe3d1_55%,#e8d9c2_100%)] ${className}`}
-        aria-hidden="true"
-      >
-        <Wheat className="size-[28%] max-h-[46px] text-gold/45" />
-      </div>
-    );
-  }
+  if (!src || failed) return null;
 
   return (
     <Image

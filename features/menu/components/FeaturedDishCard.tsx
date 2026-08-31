@@ -2,17 +2,16 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { DishImage } from "@/components/DishImage";
+import { DishImage, hasPhoto } from "@/components/DishImage";
 import { Star } from "@/components/Icons";
 import type { Dish } from "@/types";
 
 /**
  * "המומלצים שלנו היום".
  *
- * Mobile is a scroll-snap carousel — the reference shows three dots, and a
- * carousel you can actually swipe is what those dots promise. Desktop drops
- * the paging and shows the same dishes as a grid with bigger photography,
- * because there is room to see all three at once.
+ * A dish with a photograph gets one. A dish without one gets a quieter,
+ * text-led card rather than a decorative block where the picture would be —
+ * the absence should look deliberate, not broken.
  */
 export function FeaturedDish({ dishes, base }: { dishes: Dish[]; base: string }) {
   const [active, setActive] = useState(0);
@@ -21,7 +20,6 @@ export function FeaturedDish({ dishes, base }: { dishes: Dish[]; base: string })
   const onScroll = () => {
     const el = rail.current;
     if (!el) return;
-    // Slides are full-width, so the nearest page is the active one.
     setActive(Math.round(Math.abs(el.scrollLeft) / el.clientWidth));
   };
 
@@ -39,7 +37,7 @@ export function FeaturedDish({ dishes, base }: { dishes: Dish[]; base: string })
         className="no-scrollbar mt-[6px] flex snap-x snap-mandatory overflow-x-auto lg:hidden"
       >
         {dishes.map((dish, i) => (
-          <div key={dish.id} className="w-full shrink-0 snap-center pe-0">
+          <div key={dish.id} className="w-full shrink-0 snap-center">
             <Link
               href={`${base}/dish/${dish.id}`}
               className="tap flex h-[97px] items-stretch overflow-hidden rounded-[20px] bg-surface shadow-card"
@@ -49,10 +47,13 @@ export function FeaturedDish({ dishes, base }: { dishes: Dish[]; base: string })
                 overflow, which under flexbox drops a child's automatic minimum
                 size to zero — in a fixed-height column that lets the browser
                 collapse the name to nothing to resolve a few pixels of
-                overflow. Clamping the description keeps the card's height
-                honest whatever the font metrics turn out to be.
+                overflow.
               */}
-              <div className="flex min-w-0 flex-1 flex-col pe-[36px] ps-[10px] pt-[7px] pb-[9px] text-right">
+              <div
+                className={`flex min-w-0 flex-1 flex-col pt-[7px] pb-[9px] text-right ${
+                  hasPhoto(dish.image) ? "pe-[36px] ps-[10px]" : "px-[18px]"
+                }`}
+              >
                 <p className="shrink-0 truncate text-[16px] font-extrabold leading-none text-ink">
                   {dish.name}
                 </p>
@@ -63,14 +64,16 @@ export function FeaturedDish({ dishes, base }: { dishes: Dish[]; base: string })
                   ₪{dish.price}
                 </p>
               </div>
-              <div className="relative w-[176px] shrink-0 overflow-hidden rounded-[16px]">
-                <DishImage
-                  src={dish.image}
-                  sizes="176px"
-                  priority={i === 0}
-                  className="object-cover"
-                />
-              </div>
+              {hasPhoto(dish.image) && (
+                <div className="relative w-[176px] shrink-0 overflow-hidden rounded-[16px]">
+                  <DishImage
+                    src={dish.image}
+                    sizes="176px"
+                    priority={i === 0}
+                    className="object-cover"
+                  />
+                </div>
+              )}
             </Link>
           </div>
         ))}
@@ -98,20 +101,22 @@ export function FeaturedDish({ dishes, base }: { dishes: Dish[]; base: string })
             style={{ "--rise-index": i } as React.CSSProperties}
             className="tap lift rise flex flex-col overflow-hidden rounded-[20px] bg-surface shadow-card"
           >
-            <div className="relative h-[168px] w-full overflow-hidden">
-              <DishImage
-                src={dish.image}
-                sizes="(min-width: 1024px) 300px, 100vw"
-                priority={i === 0}
-                className="object-cover"
-              />
-            </div>
-            <div className="flex flex-1 flex-col p-4 text-right">
+            {hasPhoto(dish.image) && (
+              <div className="relative h-[168px] w-full overflow-hidden">
+                <DishImage
+                  src={dish.image}
+                  sizes="(min-width: 1024px) 300px, 100vw"
+                  priority={i === 0}
+                  className="object-cover"
+                />
+              </div>
+            )}
+            <div className="flex flex-1 flex-col p-5 text-right">
               <p className="text-[16.5px] font-extrabold leading-none text-ink">{dish.name}</p>
               <p className="mt-2 line-clamp-2 text-[12.5px] leading-[1.5] text-muted">
                 {dish.description}
               </p>
-              <p className="mt-3 text-[17px] font-extrabold leading-none text-gold">
+              <p className="mt-auto pt-3 text-[17px] font-extrabold leading-none text-gold">
                 ₪{dish.price}
               </p>
             </div>

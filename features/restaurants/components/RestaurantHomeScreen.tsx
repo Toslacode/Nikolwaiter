@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { RestaurantShell } from "@/components/AppShell";
 import { Heart } from "@/components/Icons";
+import { NikolAvatar } from "@/components/NikolAvatar";
 import { NikolAssistant, type QuickPrompt } from "@/features/ai-waiter/components/NikolAssistant";
 import { FeaturedDish } from "@/features/menu/components/FeaturedDishCard";
 import { SharedOrderBar } from "@/features/ordering/components/SharedOrderBar";
@@ -43,7 +44,10 @@ export function RestaurantHomeScreen({
       <div className="px-5 lg:px-0">
         {/* Greeting + primary actions */}
         <section className="mt-[9px] rounded-card bg-cream px-[11px] pb-[10px] pt-[8px] shadow-card lg:mt-0 lg:px-8 lg:py-9">
-          <p className="text-center text-[23px] font-extrabold leading-none text-ink lg:text-[26px]">
+          <p className="flex justify-center">
+            <NikolAvatar size="lg" />
+          </p>
+          <p className="mt-3 text-center text-[23px] font-extrabold leading-none text-ink lg:text-[26px]">
             היי <span>👋</span>
           </p>
           <h2 className="mt-[4px] text-center text-[22.5px] font-extrabold leading-[1.12] tracking-[-0.01em] text-ink lg:mt-2 lg:text-[30px]">
